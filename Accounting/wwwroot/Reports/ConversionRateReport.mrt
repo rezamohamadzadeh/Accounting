@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StiSerializer version="1.02" type="Net" application="StiReport">
+  <Dictionary Ref="1" type="Dictionary" isKey="true">
+    <BusinessObjects isList="true" count="0" />
+    <Databases isList="true" count="0" />
+    <DataSources isList="true" count="0" />
+    <Relations isList="true" count="0" />
+    <Report isRef="0" />
+    <Resources isList="true" count="0" />
+    <Variables isList="true" count="2">
+      <value>,RegisteredSell,RegisteredSell,,System.String,,False,False,False,False,,b768342a8afb47e0838e46bfedfe0fdd</value>
+      <value>,AllSellValue,AllSellValue,,System.String,,False,False,False,False,,b9cf1fef2e28432b852d5b9e2f94a7ff</value>
+    </Variables>
+  </Dictionary>
+  <EngineVersion>EngineV2</EngineVersion>
+  <GlobalizationStrings isList="true" count="0" />
+  <Key>fb60636d6a224fc2baefeffefb16895f</Key>
+  <MetaTags isList="true" count="0" />
+  <Pages isList="true" count="1">
+    <Page1 Ref="2" type="Page" isKey="true">
+      <Border>None;Black;2;Solid;False;4;Black</Border>
+      <Brush>Transparent</Brush>
+      <Components isList="true" count="1">
+        <Chart1 Ref="3" type="Stimulsoft.Report.Chart.StiChart" isKey="true">
+          <Area Ref="4" type="Stimulsoft.Report.Chart.StiPieArea" isKey="true">
+            <BorderColor>171, 172, 173</BorderColor>
+            <Brush>[255:255:255]</Brush>
+            <Chart isRef="3" />
+          </Area>
+          <Brush>[255:255:255]</Brush>
+          <ClientRectangle>6.2,3.8,15.6,11.6</ClientRectangle>
+          <Conditions isList="true" count="0" />
+          <ConstantLines isList="true" count="0" />
+          <CustomStyleName />
+          <Filters isList="true" count="0" />
+          <Legend Ref="5" type="Stimulsoft.Report.Chart.StiLegend" isKey="true">
+            <BorderColor>225, 225, 225</BorderColor>
+            <Brush>[255:255:255]</Brush>
+            <Chart isRef="3" />
+            <Font>Arial,8</Font>
+            <LabelsColor>140, 140, 140</LabelsColor>
+            <MarkerSize>10, 10</MarkerSize>
+            <ShowShadow>False</ShowShadow>
+            <TitleColor>105, 105, 105</TitleColor>
+            <TitleFont>Arial,14,Bold</TitleFont>
+          </Legend>
+          <Name>Chart1</Name>
+          <Page isRef="2" />
+          <Parent isRef="2" />
+          <Series isList="true" count="1">
+            <Item3 Ref="6" type="Stimulsoft.Report.Chart.StiPieSeries" isKey="true">
+              <AllowApplyStyle>False</AllowApplyStyle>
+              <BorderColor>Transparent</BorderColor>
+              <Brush>[52:152:219]</Brush>
+              <Chart isRef="3" />
+              <Conditions isList="true" count="0" />
+              <Filters isList="true" count="0" />
+              <Lighting>False</Lighting>
+              <ListOfValues>{AllSellValue};{RegisteredSell}</ListOfValues>
+              <SeriesLabels Ref="7" type="Stimulsoft.Report.Chart.StiCenterAxisLabels" isKey="true">
+                <BorderColor>Transparent</BorderColor>
+                <Brush>Transparent</Brush>
+                <Chart isRef="3" />
+                <Font>Arial,10</Font>
+                <LabelColor>50, 58, 69</LabelColor>
+                <MarkerSize>8, 6</MarkerSize>
+                <ValueTypeSeparator>-</ValueTypeSeparator>
+                <Width>0</Width>
+              </SeriesLabels>
+              <ShowShadow>False</ShowShadow>
+              <Title>Sell</Title>
+              <TopN Ref="8" type="Stimulsoft.Report.Chart.StiSeriesTopN" isKey="true" />
+            </Item3>
+          </Series>
+          <SeriesLabels Ref="9" type="Stimulsoft.Report.Chart.StiCenterPieLabels" isKey="true">
+            <BorderColor>Transparent</BorderColor>
+            <Brush>Transparent</Brush>
+            <Chart isRef="3" />
+            <Font>Arial,10</Font>
+            <LabelColor>50, 58, 69</LabelColor>
+            <MarkerSize>8, 6</MarkerSize>
+            <ValueTypeSeparator>-</ValueTypeSeparator>
+            <Width>0</Width>
+          </SeriesLabels>
+          <SeriesLabelsConditions isList="true" count="0" />
+          <Sort isList="true" count="0" />
+          <Strips isList="true" count="0" />
+          <Style Ref="10" type="Stimulsoft.Report.Chart.StiStyle29" isKey="true">
+            <Conditions isList="true" count="0" />
+            <Name />
+          </Style>
+          <Table Ref="11" type="Stimulsoft.Report.Chart.StiChartTable" isKey="true">
+            <DataCells Ref="12" type="Stimulsoft.Report.Chart.StiChartTableDataCells" isKey="true">
+              <Font>Arial,8</Font>
+              <TextColor>140, 140, 140</TextColor>
+            </DataCells>
+            <GridLineColor>225, 225, 225</GridLineColor>
+            <Header Ref="13" type="Stimulsoft.Report.Chart.StiChartTableHeader" isKey="true">
+              <Brush>White</Brush>
+              <Font>Arial,8</Font>
+              <TextColor>DarkGray</TextColor>
+            </Header>
+          </Table>
+          <Title Ref="14" type="Stimulsoft.Report.Chart.StiChartTitle" isKey="true">
+            <Brush>[140:140:140]</Brush>
+            <Font>Tahoma,12,Bold</Font>
+          </Title>
+        </Chart1>
+      </Components>
+      <Conditions isList="true" count="0" />
+      <Guid>f23b027159854f838277e1682ea8632e</Guid>
+      <Margins>1,1,1,1</Margins>
+      <Name>Page1</Name>
+      <Orientation>Landscape</Orientation>
+      <PageHeight>21</PageHeight>
+      <PageWidth>29.7</PageWidth>
+      <PaperSize>A4</PaperSize>
+      <Report isRef="0" />
+    </Page1>
+  </Pages>
+  <ReferencedAssemblies isList="true" count="8">
+    <value>System.Dll</value>
+    <value>System.Drawing.Dll</value>
+    <value>System.Windows.Forms.Dll</value>
+    <value>System.Data.Dll</value>
+    <value>System.Xml.Dll</value>
+    <value>Stimulsoft.Controls.Dll</value>
+    <value>Stimulsoft.Base.Dll</value>
+    <value>Stimulsoft.Report.Dll</value>
+  </ReferencedAssemblies>
+  <ReportAlias>Report</ReportAlias>
+  <ReportChanged>7/13/2020 10:07:10 AM</ReportChanged>
+  <ReportCreated>7/13/2020 9:15:12 AM</ReportCreated>
+  <ReportFile>F:\AffiliateProfile\AffiliateProfile\AffiliateProfile\wwwroot\Reports\ConversionRateReport.mrt</ReportFile>
+  <ReportGuid>81290b95771143d9a0a1a413900ff893</ReportGuid>
+  <ReportName>Report</ReportName>
+  <ReportUnit>Centimeters</ReportUnit>
+  <ReportVersion>2020.2.3.0</ReportVersion>
+  <Script>using System;
+using System.Drawing;
+using System.Windows.Forms;
+using System.Data;
+using Stimulsoft.Controls;
+using Stimulsoft.Base.Drawing;
+using Stimulsoft.Report;
+using Stimulsoft.Report.Dialogs;
+using Stimulsoft.Report.Components;
+
+namespace Reports
+{
+    public class Report : Stimulsoft.Report.StiReport
+    {
+        public Report()        {
+            this.InitializeComponent();
+        }
+
+        #region StiReport Designer generated code - do not modify
+		#endregion StiReport Designer generated code - do not modify
+    }
+}
+</Script>
+  <ScriptLanguage>CSharp</ScriptLanguage>
+  <Styles isList="true" count="0" />
+</StiSerializer>

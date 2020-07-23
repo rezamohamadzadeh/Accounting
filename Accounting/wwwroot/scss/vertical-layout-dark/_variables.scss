@@ -1,0 +1,78 @@
+////////// SIDEBAR ////////
+$sidebar-width-lg: 270px;
+$sidebar-width-mini: 185px;
+$sidebar-width-icon: 70px;
+
+
+$sidebar-bg: #27293d;
+$sidebar-menu-color: #fff;
+$sidebar-menu-active-bg: theme-color(primary); 
+$sidebar-menu-active-color: $white;
+$sidebar-menu-hover-bg: theme-color(primary); 
+$sidebar-menu-hover-color: #8c909a;
+$sidebar-submenu-color: $sidebar-menu-color;
+$sidebar-submenu-hover-bg: initial;
+$sidebar-submenu-hover-color: #4e7bf7;
+$sidebar-submenu-active-color: #4e7bf7;
+$sidebar-menu-icon-color: $sidebar-menu-color;
+$sidebar-menu-arrow-color: $sidebar-menu-color; 
+$sidebar-menu-icon-bg: rgba(255, 255, 255, 0.2);
+$sidebar-menu-title-color: rgba(255,255,255,.31);
+$sidebar-designer-info-color: rgba(255,255,255,.62);
+$sidebar-profile-bg: #7819a5;
+
+$sidebar-menu-font-size: .875rem;
+$sidebar-menu-padding-left: .875rem;
+$sidebar-menu-padding-right: .875rem;
+$sidebar-menu-padding-top: .5rem;
+$sidebar-menu-padding-bottom: .5rem;
+$sidebar-menu-margin-left: 2.375rem;
+$sidebar-menu-margin-right: 2.375rem;
+
+$sidebar-submenu-padding: .25rem 0 0 3.5rem;
+$sidebar-submenu-font-size: .875rem;
+$sidebar-submenu-item-padding: .75rem 1.5rem;
+
+$sidebar-icon-font-size:  1.125rem;
+$sidebar-arrow-font-size: .625rem;
+
+$sidebar-profile-bg: transparent;
+$sidebar-profile-padding: 0 1.625rem 2.25rem 1.188rem;
+
+$sidebar-mini-menu-padding: .8125rem 1rem .8125rem 1rem;
+
+$sidebar-icon-only-menu-padding: .5rem 1.625rem .5rem 1.188rem;
+$sidebar-icon-only-submenu-padding: 0 0 0 .5rem;
+
+$sidebar-box-shadow: 6px 12px 19px -18px #000;
+
+$rtl-sidebar-submenu-padding: 0 4.5rem 0 0;
+
+$icon-only-collapse-width: 190px;
+$icon-only-menu-bg: $sidebar-bg;
+
+///////// SIDEBAR ////////
+
+///////// BOXED LAYOUT ///////
+$boxed-container-width: 1200px;
+$boxed-layout-bg: #c6c8ca;
+///////// BOXED LAYOUT ///////
+
+///////// SETTINGS PANEL ////////
+
+$settings-panel-width: 300px;
+
+///////// NAVBAR ////////
+
+$navbar-default-bg: #27293d;
+$navbar-height: 60px;
+$navbar-menu-color: #b1b1b5;
+$navbar-font-size: .875rem;
+$navbar-brand-wrapper-bg: #410060;
+$navbar-icon-font-size: .9375rem;
+
+$navbar-toggler-color: #fff;
+$navbar-pulse-shadow-start:0 0 0 0px rgba(255, 255, 96, 0.4);
+$navbar-pulse-shadow-end:0 0 0 15px rgba(65, 0, 96, 0);
+
+///////// NAVBAR ////////

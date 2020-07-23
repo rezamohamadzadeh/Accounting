@@ -1,0 +1,66 @@
+﻿@model ProfileDto
+@{
+    ViewData["Title"] = "Profile";
+}
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">Profile</h4>
+                <hr /><br />
+                @if (ViewBag.SuccessMessage != null)
+                {
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h5><i class="icon fas fa-check"></i> Success !</h5>
+                        @ViewBag.SuccessMessage
+                    </div>
+                }
+                @if (ViewBag.ErrorMessage != null)
+                {
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h5><i class="icon fas fa-remove"></i> Error !</h5>
+                        @ViewBag.ErrorMessage
+                    </div>
+                }
+
+                <form asp-action="Profile" method="post" class="pt-3" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="font-size-14 font-weight-bold" asp-for="Name"></label>
+                                <input class="form-control" asp-for="Name">
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="font-size-14 font-weight-bold" asp-for="Files"></label>
+                                <input class="form-control" type="file" asp-for="Files">
+                                @if (Model.Image != null && Model.Image != "")
+                                {<img class="rounded-circle" width="200" height="200" src="~/UserProfile/@Model.Image" alt="User Profile">}
+                                <span asp-validation-for="Files" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <hr />
+                        <a asp-action="Index" class="btn btn-danger mt-3 mt-sm-0 m-1 pull-right">Back to dashboard</a>
+                        <button type="submit" class="btn btn-primary m-1 mt-3 mt-sm-0 pull-right">Edit profile</button>
+
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}

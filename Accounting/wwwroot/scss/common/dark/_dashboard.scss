@@ -1,0 +1,87 @@
+/* Footer */
+
+.welcome-message {
+  background: $welcome-bg;
+  padding: 40px 30px;
+  color: $welcome-text-color;
+  .image-border {
+    &.rtl {
+      border-right: none;
+      border-left: 1px solid $welcome-img-border-color;
+    }
+    border-right: 1px solid $welcome-img-border-color;
+    @media (max-width: 767px) {
+      border-right: none;
+    }
+  }
+}
+.sort-right-btn {
+  position: absolute;
+  right: 1.25rem;
+  top: .75rem;
+  &.rtl {
+    right: auto;
+    left: 1.25rem;
+  }
+  @media (max-width: 767px) {
+    position: static;
+    margin: .5rem 1.75rem;
+    .btn {
+      margin-bottom: 1rem;
+    }
+  }
+}
+.clear {
+  clear: both;
+}
+.custom-fieldset {
+  background: $card-bg;
+  border: 1px solid $fieldset-border-color;
+  padding: 1.5rem;
+  border-radius:.25rem;
+  font-size: 10px;
+  label {
+    width: auto;
+    padding: .625rem 1rem;
+    color: $text-muted;
+    background: $card-bg;
+    margin-top: -44px;
+    font-size: 13px;
+    font-weight: 500;
+    display: block;
+    float: left;
+  }
+  span {
+    font-size: 12px;
+  }
+}
+.circle-arrow {
+  width: 18px;
+  height: 18px;
+  border-radius:100%;
+  display: inline-block;
+  background: theme-color(success);
+  text-align: center;
+  margin-right: .25rem;
+  i {
+    color: $white;
+  }
+}
+.chart-legends-revenue-statistics {
+  .legend-label {
+    color: $body-color;
+    font-size: 15px;
+    span {
+      width: 10px; 
+      height: 10px;
+      border-radius: 100%;
+      margin-right: .5rem;
+    }
+  }
+}
+.animate-icon {
+  transition: transform .2s;
+  &:hover {
+    transform: scale(1.5);
+  }
+}

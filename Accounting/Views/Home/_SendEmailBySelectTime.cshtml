@@ -1,0 +1,15 @@
+﻿@model SendEmailBySelectTimeDto
+
+<div class="row">
+    <div class="col-12">
+        <h4 class="card-title">Clockpicker</h4>
+        <p class="card-description">A simple clockpicker</p>
+        <div class="input-group date">
+            <div class="input-group" >
+                <input asp-for="Time" type="time" class="form-control">
+            </div>
+        </div>
+        <span class="text-danger" asp-validation-for="Time"></span>
+    </div>
+
+</div>

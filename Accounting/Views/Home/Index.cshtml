@@ -1,0 +1,88 @@
+﻿@model SendEmailDto
+@{
+    ViewData["Title"] = "ShowAffiliateDetail";
+}
+@section Styles{
+    <!-- base:css -->
+    <link rel="stylesheet" href="~/Accounting/vendors/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/Accounting/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="~/Accounting/vendors/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.css">
+
+}
+<br />
+
+<br />
+<div class="content-wrapper p-0 pt-4">
+    @if (ViewBag.SuccessMessage != null)
+    {
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="icon fa fa-check"></i> Success !</h5>
+            @ViewBag.SuccessMessage
+        </div>
+    }
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="icon fa fa-remove"></i> Error !</h5>
+            @ViewBag.ErrorMessage
+        </div>
+    }
+    <div class="row">
+        <div class="col-lg-12 grid-margin d-flex align-items-stretch">
+            <div class="row flex-grow">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4>
+                                Send email by selecting day and time
+                            </h4>
+                            <hr />
+                            <br />
+                            <form asp-action="SendEmailBySelectWeekDayTime" method="post">
+                                <div asp-validation-summary="All" class="text-danger"></div>
+                                <partial name="_SendEmailBySelectWeekDayTime" model="Model" />
+                                <br />
+                                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-12 grid-margin d-flex align-items-stretch">
+            <div class="row flex-grow">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4>
+                                Send email by selecting time
+                            </h4>
+                            <hr />
+                            <br />
+                            <form asp-action="SendEmailBySelectTime" method="post">
+                                <div asp-validation-summary="All" class="text-danger"></div>
+                                <partial name="_SendEmailBySelectTime" model="Model" />
+                                <br />
+                                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+@section Scripts{
+
+    <script src="~/Accounting/vendors/moment/moment.min.js"></script>
+    <script src="~/Accounting/vendors/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.js"></script>
+    <script src="~/js/formpickers.js"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,52 @@
+/* Tables */
+
+.table {
+  margin-bottom: 0;
+  thead {
+    th {
+      border-top: 0;
+      border-bottom-width: 1px;
+      font-weight: normal;
+      font-size: 13px;
+      color: $body-color;
+      i {
+        margin-left: 0.325rem;
+      }
+    }
+  }
+  th,
+  td {
+    vertical-align: middle;
+    line-height: 1;
+  }
+  td {
+    font-size: $default-font-size;
+    img {
+      width: 36px;
+      height: 36px;
+      border-radius: 100%;
+      &.product-icon {
+        width: 33px;
+        height: 25px;
+        padding: .2rem;
+        border: 1px solid $border-color;
+        border-radius: 0;
+        margin-right: .5rem;
+      }
+    }
+    .badge {
+      margin-bottom: 0;
+    }
+  }
+  &.table-borderless {
+    border: none;
+    tr,
+    td,
+    th {
+      border: none;
+    }
+  }
+  &.table-bordered {
+    border-top: 1px solid $border-color;
+  }
+}
