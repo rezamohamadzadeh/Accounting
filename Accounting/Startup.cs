@@ -1,3 +1,5 @@
+using Accounting.Hangfire;
+using Accounting.Jobs;
 using Accounting.Utility;
 using AutoMapper;
 using DAL;
@@ -86,7 +88,7 @@ namespace Accounting
             services.AddTransient<IEmailSender, EmailSender>(); // Dependecy injection For Email Service
             #endregion
 
-            //services.AddTransient<IMyEmailService, MyEmailService>();
+            services.AddTransient<IHanfireJobs, HanfireJobs>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -107,7 +109,11 @@ namespace Accounting
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseHangfireDashboard();
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new[] { new HangfireAuthorizationFilter() }
+            });
+
 
             app.UseEndpoints(endpoints =>
             {

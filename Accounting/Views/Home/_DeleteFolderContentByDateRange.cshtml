@@ -1,0 +1,35 @@
+﻿@model DeleteFolderContentByDateRangeDto
+
+<div class="row">
+    <div class="col-12">
+        <h4 class="card-title">Day Of Week</h4>
+        <p class="card-description">Select Your Day</p>
+        <div class="input-group input-daterange d-flex align-items-center">
+            <input type="text" asp-for="StartDate" class="form-control" placeholder="Plesae Enter StartDate">
+            <div class="input-group-addon mx-4">to</div>
+            <input type="text" asp-for="EndDate" class="form-control" placeholder="Plesae Enter EndDate">
+        </div>
+        <br />
+        <br />
+    </div>
+    
+    <div class="col-6">
+        <h4 class="card-title">Clockpicker</h4>
+        <p class="card-description">select your run job time</p>
+        <div class="input-group">
+            <div class="input-group">
+                <input asp-for="Time" type="time" class="form-control">
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <h4 class="card-title">Folder Name</h4>
+        <p class="card-description">Enter your folder name</p>
+        <div class="input-group">
+            <div class="input-group">
+                <input asp-for="FolderName" type="text" class="form-control">
+            </div>
+        </div>
+    </div>
+
+</div>

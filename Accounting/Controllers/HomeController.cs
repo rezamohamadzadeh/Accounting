@@ -1,4 +1,5 @@
 ﻿using Accounting.Controllers;
+using Accounting.Jobs;
 using Accounting.Models;
 using AutoMapper;
 using Common.Extensions;
@@ -28,19 +29,18 @@ namespace Accounting.Controllers
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _uow;
         private readonly SignInManager<ApplicationUser> _signInManager;
-
-        private readonly IEmailSender _emailSender;
+        private readonly IHanfireJobs _hanfireJobs;
 
         public HomeController(UserManager<ApplicationUser> userManager,
             IMapper mapper, IUnitOfWork uow,
             SignInManager<ApplicationUser> signInManager,
-            IEmailSender emailSender)
+            IHanfireJobs hanfireJobs)
         {
             _userManager = userManager;
             _mapper = mapper;
             _uow = uow;
             _signInManager = signInManager;
-            _emailSender = emailSender;
+            _hanfireJobs = hanfireJobs;
         }
 
         public IActionResult Index()
@@ -70,7 +70,7 @@ namespace Accounting.Controllers
                 var cron = CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(model.DayOfWeek, model.Time.Hour, model.Time.Minute).Build() as CronTriggerImpl;
                 var lastChar = cron.CronExpressionString[cron.CronExpressionString.Length - 1];// get dayofweek
                 ConvertWeekDayToWeekStrName(cron, lastChar);
-                RecurringJob.AddOrUpdate("SendEmailBySelectWeekDayTime", () => AccountingAffiliateAmountSell(), cron.CronExpressionString, TimeZoneInfo.Local);
+                RecurringJob.AddOrUpdate("SendEmailBySelectWeekDayTime", () => _hanfireJobs.AccountingAffiliateAmountSell(), cron.CronExpressionString, TimeZoneInfo.Local);
 
 
                 feachDayOfWeek();
@@ -104,7 +104,34 @@ namespace Accounting.Controllers
                     return View();
                 }
                 var cron = CronScheduleBuilder.DailyAtHourAndMinute(model.Time.Hour, model.Time.Minute).Build() as CronTriggerImpl;
-                RecurringJob.AddOrUpdate("SendEmailBySelectTime", () => AccountingAffiliateAmountSell(), cron.CronExpressionString, TimeZoneInfo.Local);
+                RecurringJob.AddOrUpdate("SendEmailBySelectTime", () => _hanfireJobs.AccountingAffiliateAmountSell(), cron.CronExpressionString, TimeZoneInfo.Local);
+
+
+                feachDayOfWeek();
+                ViewBag.SuccessMessage = SuccessMessage;
+                return View("Index");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ErrorMessage + ex.Message;
+                return View("Index");
+            }
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteFolderContentByDateRange(DeleteFolderContentByDateRangeDto model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    feachDayOfWeek();
+                    return View();
+                }
+                var cron = CronScheduleBuilder.DailyAtHourAndMinute(model.Time.Hour, model.Time.Minute).Build() as CronTriggerImpl;
+                RecurringJob.AddOrUpdate("DeleteFolderContentByDateRange", () => _hanfireJobs.DeleteFolderContentByDateRange(model.StartDate,model.EndDate,model.FolderName), cron.CronExpressionString, TimeZoneInfo.Local);
 
 
                 feachDayOfWeek();
@@ -235,25 +262,5 @@ namespace Accounting.Controllers
             ViewBag.DayOfWeek = dayOfWeek;
         }
 
-
-        /// <summary>
-        /// My Job : Calc Affiliate Sell Amounts
-        /// </summary>
-        /// <returns></returns>
-        public async Task AccountingAffiliateAmountSell()
-        {
-            var affiliates = _uow.AffiliateRepo.Get();
-
-            foreach (var item in affiliates)
-            {
-                var affiliatecomision = _uow.AffiliateRepo.Get(d => d.Email == item.Email).FirstOrDefault();
-                var Comision = affiliatecomision == null ? 0 : affiliatecomision.comision;
-                var affiliateSell = _uow.SellRepo.Get(d => d.AffiliateCode == item.Code && d.PayStatus != PayStatus.Registered && d.CreateAt > DateTime.Now.AddDays(-1)).Select(d => new Tb_Sell { Price = d.Price }).ToList();
-                var sumSell = affiliateSell == null ? 0 : affiliateSell.Sum(d => d.Price);
-
-                var CommisionAmount = (sumSell * Comision) / 100;
-                await _emailSender.SendEmailAsync(item.Email.Trim(), "Your Today Ammount Comission", "Your Today Ammount Comission Is : " + CommisionAmount.ToString());
-            }
-        }
     }
 }
