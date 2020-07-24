@@ -47,7 +47,7 @@ namespace Accounting.Jobs
             foreach (string file in files)
             {
                 FileInfo fi = new FileInfo(file);
-                if (fi.CreationTime > startDate && fi.CreationTime < endDate)
+                if (fi.CreationTime.Date >= startDate.Date && fi.CreationTime.Date <= endDate.Date)
                     fi.Delete();
             }
         }
