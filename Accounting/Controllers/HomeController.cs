@@ -45,7 +45,7 @@ namespace Accounting.Controllers
 
         public IActionResult Index()
         {
-            feachDayOfWeek();
+            feachEnums();
             return View();
         }
 
@@ -63,7 +63,7 @@ namespace Accounting.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    feachDayOfWeek();
+                    feachEnums();
                     return View();
                 }
 
@@ -73,7 +73,7 @@ namespace Accounting.Controllers
                 RecurringJob.AddOrUpdate("SendEmailBySelectWeekDayTime", () => _hanfireJobs.AccountingAffiliateAmountSell(), cron.CronExpressionString, TimeZoneInfo.Local);
 
 
-                feachDayOfWeek();
+                feachEnums();
                 ViewBag.SuccessMessage = SuccessMessage;
 
                 return View("Index");
@@ -83,8 +83,46 @@ namespace Accounting.Controllers
                 ViewBag.ErrorMessage = ErrorMessage + ex.Message;
                 return View("Index");
             }
-            
+
         }
+
+        /// <summary>
+        /// BackUp from database By Select Dayofweek,Time and DatabaseName
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult BackUpFromDatabase(BackUpDatabaseDto model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    feachEnums();
+                    return View();
+                }
+
+                var cron = CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(model.DayOfWeek, model.Time.Hour, model.Time.Minute).Build() as CronTriggerImpl;
+                var lastChar = cron.CronExpressionString[cron.CronExpressionString.Length - 1];// get dayofweek
+                ConvertWeekDayToWeekStrName(cron, lastChar);
+                RecurringJob.AddOrUpdate("BackUpFromDatabase" + model.DatabaseName.ToString(), () => _hanfireJobs.BackupFromDataBase(model.DatabaseName), cron.CronExpressionString, TimeZoneInfo.Local);
+
+
+                feachEnums();
+                ViewBag.SuccessMessage = SuccessMessage;
+
+                return View("Index");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ErrorMessage + ex.Message;
+                return View("Index");
+            }
+
+        }
+
+
 
         /// <summary>
         /// Send Email By Select Only Time
@@ -100,14 +138,14 @@ namespace Accounting.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    feachDayOfWeek();
+                    feachEnums();
                     return View();
                 }
                 var cron = CronScheduleBuilder.DailyAtHourAndMinute(model.Time.Hour, model.Time.Minute).Build() as CronTriggerImpl;
                 RecurringJob.AddOrUpdate("SendEmailBySelectTime", () => _hanfireJobs.AccountingAffiliateAmountSell(), cron.CronExpressionString, TimeZoneInfo.Local);
 
 
-                feachDayOfWeek();
+                feachEnums();
                 ViewBag.SuccessMessage = SuccessMessage;
                 return View("Index");
             }
@@ -121,20 +159,46 @@ namespace Accounting.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteFolderContentByDateRange(DeleteFolderContentByDateRangeDto model)
+        public IActionResult DeleteLocalFolderContentByDateRange(DeleteLocalFolderContentByDateRangeDto model)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    feachDayOfWeek();
+                    feachEnums();
                     return View();
                 }
                 var cron = CronScheduleBuilder.DailyAtHourAndMinute(model.Time.Hour, model.Time.Minute).Build() as CronTriggerImpl;
-                RecurringJob.AddOrUpdate("DeleteFolderContentByDateRange", () => _hanfireJobs.DeleteFolderContentByDateRange(model.StartDate,model.EndDate,model.FolderName), cron.CronExpressionString, TimeZoneInfo.Local);
+                RecurringJob.AddOrUpdate("DeleteLocalFolderContentByDateRange", () => _hanfireJobs.DeleteLocalFolderContentByDateRange(model.StartDate, model.EndDate, model.FolderName), cron.CronExpressionString, TimeZoneInfo.Local);
 
 
-                feachDayOfWeek();
+                feachEnums();
+                ViewBag.SuccessMessage = SuccessMessage;
+                return View("Index");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ErrorMessage + ex.Message;
+                return View("Index");
+            }
+
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteRemoteFolderContentByDateRange(DeleteRemoteFolderContentByDateRangeDto model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    feachEnums();
+                    return View();
+                }
+                var cron = CronScheduleBuilder.DailyAtHourAndMinute(model.Time.Hour, model.Time.Minute).Build() as CronTriggerImpl;
+                RecurringJob.AddOrUpdate("DeleteRemoteFolderContentByDateRange", () => _hanfireJobs.DeleteRemoteFolderContentByDateRange(model.StartDate, model.EndDate, model.RemoteAddress, model.UserName, model.Password), cron.CronExpressionString, TimeZoneInfo.Local);
+
+
+                feachEnums();
                 ViewBag.SuccessMessage = SuccessMessage;
                 return View("Index");
             }
@@ -244,22 +308,38 @@ namespace Accounting.Controllers
 
 
         /// <summary>
-        /// feach DayOfWeek Enum in view
+        /// feach Enums in view
         /// </summary>
-        private void feachDayOfWeek()
+        private void feachEnums()
         {
             var dayOfWeek = new List<SelectListItem>();
+            var databaseNames = new List<SelectListItem>();
+
             dayOfWeek.Add(new SelectListItem
             {
                 Text = "Please Select Day Of Week",
                 Value = ""
             });
+
+            databaseNames.Add(new SelectListItem
+            {
+                Text = "Please Select DatabaseName",
+                Value = ""
+            });
+
             foreach (DayOfWeek eVal in Enum.GetValues(typeof(DayOfWeek)))
             {
                 dayOfWeek.Add(new SelectListItem { Text = Enum.GetName(typeof(DayOfWeek), eVal), Value = eVal.ToString() });
             }
 
+            foreach (DatabaseName eVal in Enum.GetValues(typeof(DatabaseName)))
+            {
+                databaseNames.Add(new SelectListItem { Text = Enum.GetName(typeof(DatabaseName), eVal), Value = eVal.ToString() });
+            }
+
+
             ViewBag.DayOfWeek = dayOfWeek;
+            ViewBag.DatabaseName = databaseNames;
         }
 
     }

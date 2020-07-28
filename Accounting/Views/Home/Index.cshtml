@@ -1,4 +1,4 @@
-﻿@model SendEmailDto
+﻿@model JobsModelDto
 @{
     ViewData["Title"] = "ShowAffiliateDetail";
 }
@@ -36,7 +36,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h4>
-                                Send email by selecting day and time
+                                Send email for calc Affiliate Ammount by selecting day and time
                             </h4>
                             <hr />
                             <br />
@@ -58,7 +58,30 @@
                     <div class="card">
                         <div class="card-body">
                             <h4>
-                                Send email by selecting time
+                                Backup from Database by selecting day,time and Db name
+                            </h4>
+                            <hr />
+                            <br />
+                            <form asp-action="BackUpFromDatabase" method="post">
+                                <div asp-validation-summary="All" class="text-danger"></div>
+                                <partial name="_BackupFromDatabase" model="Model" />
+                                <br />
+                                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-lg-12 grid-margin d-flex align-items-stretch">
+            <div class="row flex-grow">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4>
+                                Send email for calc Affiliate Ammount by selecting time
                             </h4>
                             <hr />
                             <br />
@@ -80,13 +103,35 @@
                     <div class="card">
                         <div class="card-body">
                             <h4>
-                                Delete Folder content by date range
+                                Delete Local Folder content by date range
                             </h4>
                             <hr />
                             <br />
-                            <form asp-action="DeleteFolderContentByDateRange" method="post">
+                            <form asp-action="DeleteLocalFolderContentByDateRange" method="post">
                                 <div asp-validation-summary="All" class="text-danger"></div>
-                                <partial name="_DeleteFolderContentByDateRange" model="Model" />
+                                <partial name="_DeleteLocalFolderContentByDateRange" model="Model" />
+                                <br />
+                                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-12 grid-margin d-flex align-items-stretch">
+            <div class="row flex-grow">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4>
+                                Delete Remote Folder content by date range
+                            </h4>
+                            <hr />
+                            <br />
+                            <form asp-action="DeleteRemoteFolderContentByDateRange" method="post">
+                                <div asp-validation-summary="All" class="text-danger"></div>
+                                <partial name="_DeleteRemoteFolderContentByDateRange" model="Model" />
                                 <br />
                                 <button type="submit" class="btn btn-primary mr-2">Submit</button>
                             </form>

@@ -1,0 +1,53 @@
+﻿@model DeleteRemoteFolderContentByDateRangeDto
+
+<div class="row">
+    <div class="col-8">
+        <h4 class="card-title">Select Date</h4>
+        <p class="card-description">Select Your Day</p>
+        <div class="input-group input-daterange d-flex align-items-center">
+            <input type="text" asp-for="StartDate" class="form-control" placeholder="Plesae Enter StartDate">
+            <div class="input-group-addon mx-4">to</div>
+            <input type="text" asp-for="EndDate" class="form-control" placeholder="Plesae Enter EndDate">
+        </div>
+        <br />
+        <br />
+    </div>
+    
+    <div class="col-4">
+        <h4 class="card-title">Clockpicker</h4>
+        <p class="card-description">select your run job time</p>
+        <div class="input-group">
+            <div class="input-group">
+                <input asp-for="Time" type="time" class="form-control">
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <h4 class="card-title">Ftp url </h4>
+        <p class="card-description">example : ftp://server.com/folderName </p>
+        <div class="input-group">
+            <div class="input-group">
+                <input asp-for="RemoteAddress" placeholder="ftp://server.com/folderName" class="form-control">
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <h4 class="card-title">UserName </h4>
+        <p class="card-description">Enter your ftp username </p>
+        <div class="input-group">
+            <div class="input-group">
+                <input asp-for="UserName" placeholder="Please enter username" class="form-control">
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <h4 class="card-title">Password </h4>
+        <p class="card-description">Enter your ftp password </p>
+        <div class="input-group">
+            <div class="input-group">
+                <input asp-for="Password" placeholder="Please enter password" class="form-control">
+            </div>
+        </div>
+    </div>
+
+</div>

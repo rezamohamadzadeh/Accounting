@@ -8,9 +8,6 @@ namespace Accounting.Utilitis.AutoMapper
     {
         public AutoMapperProfile()
         {
-            //CreateMap<Tb_Sell, SellDto>()
-            //.ReverseMap();
-
             CreateMap<ApplicationUser, ProfileDto>()
             .ReverseMap();
 

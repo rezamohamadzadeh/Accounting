@@ -32,7 +32,7 @@ namespace DAL
 
         public DbSet<Tb_Team> Tb_Teams { get; set; }
 
-        public DbSet<Tb_Agent> Tb_Agents { get; set; }
+        public DbSet<Tb_Agent> Tb_Agents { get; set; }        
 
         public DbSet<Tb_Broker> Tb_Brokers { get; set; }
 
@@ -46,8 +46,8 @@ namespace DAL
 
         public DbSet<Tb_TeamUsers> Tb_TeamUsers { get; set; }
 
-        public DbSet<Tb_Affiliates> Tb_Affiliates { get; set; }                 
-        
+        public DbSet<Tb_Affiliates> Tb_Affiliates { get; set; }
+
         public DbSet<Tb_SupportType> Tb_SupportTypes { get; set; }        
 
         public DbSet<Tb_ProductDetail> Tb_ProductDetails { get; set; }

@@ -12,10 +12,10 @@ namespace Repository.InterFace
         public SellRepository SellRepo { get; }
 
         public UserRepository UserRepo { get; }
-       
+
         public AffiliateRepository AffiliateRepo { get; }
 
-        bool BackUpFromDb(string path);
+        void BackUpFromDb(DatabaseName databaseName);
 
         void Save();
         Task SaveAsync();

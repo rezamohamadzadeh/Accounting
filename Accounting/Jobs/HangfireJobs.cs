@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Accounting.Jobs
@@ -24,7 +25,10 @@ namespace Accounting.Jobs
             _emailSender = emailSender;
         }
 
-
+        /// <summary>
+        /// Calc AffiliateAmountSell
+        /// </summary>
+        /// <returns></returns>
         public async Task AccountingAffiliateAmountSell()
         {
             var affiliates = _uow.AffiliateRepo.Get();
@@ -41,7 +45,13 @@ namespace Accounting.Jobs
             }
         }
 
-        public void DeleteFolderContentByDateRange(DateTime startDate, DateTime endDate, string folderName)
+        /// <summary>
+        /// Delete local file on server
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="folderName"></param>
+        public void DeleteLocalFolderContentByDateRange(DateTime startDate, DateTime endDate, string folderName)
         {
             string[] files = Directory.GetFiles("wwwroot/" + folderName);
             foreach (string file in files)
@@ -50,6 +60,83 @@ namespace Accounting.Jobs
                 if (fi.CreationTime.Date >= startDate.Date && fi.CreationTime.Date <= endDate.Date)
                     fi.Delete();
             }
+        }
+
+        /// <summary>
+        /// Delete remote files on ftp server 
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="remoteAddress"></param>
+        public void DeleteRemoteFolderContentByDateRange(DateTime startDate,
+            DateTime endDate, string remoteAddress,string userName,string Password)
+        {
+            remoteAddress += "/";
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(remoteAddress);
+            request.Method = WebRequestMethods.Ftp.RemoveDirectory;
+            NetworkCredential credentials = new NetworkCredential(userName, Password);
+            FtpWebRequest listRequest = (FtpWebRequest)WebRequest.Create(remoteAddress);
+            listRequest.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
+            listRequest.Credentials = credentials;
+
+            List<string> lines = new List<string>();
+
+            using (FtpWebResponse listResponse = (FtpWebResponse)listRequest.GetResponse())
+            using (Stream listStream = listResponse.GetResponseStream())
+            using (StreamReader listReader = new StreamReader(listStream))
+            {
+                while (!listReader.EndOfStream)
+                {
+                    lines.Add(listReader.ReadLine());
+                }
+            }
+
+            foreach (string line in lines)
+            {
+                string[] tokens =
+                    line.Split(new[] { ' ' }, 9, StringSplitOptions.RemoveEmptyEntries);
+                string name = tokens[3];
+                string date = tokens[0];
+
+                string fileUrl = remoteAddress + name;
+
+                //if (permissions[0] == 'd')
+                //{
+                //    DeleteFtpDirectory(fileUrl + "/", credentials);
+                //}
+                //else
+                //{
+
+                //    FtpWebRequest deleteRequest = (FtpWebRequest)WebRequest.Create(fileUrl);
+                //    deleteRequest.Method = WebRequestMethods.Ftp.DeleteFile;
+                //    deleteRequest.Credentials = credentials;
+
+                //    deleteRequest.GetResponse();
+                //}
+                DateTime FileDate = DateTime.Parse(date);
+                if (FileDate >= startDate && FileDate <= endDate)
+                {
+                    FtpWebRequest deleteRequest = (FtpWebRequest)WebRequest.Create(fileUrl);
+                    deleteRequest.Method = WebRequestMethods.Ftp.DeleteFile;
+                    deleteRequest.Credentials = credentials;
+
+                    deleteRequest.GetResponse();
+                }
+            }
+
+            //FtpWebRequest removeRequest = (FtpWebRequest)WebRequest.Create(url);
+            //removeRequest.Method = WebRequestMethods.Ftp.RemoveDirectory;
+            //removeRequest.Credentials = credentials;
+
+            //removeRequest.GetResponse();
+        }
+
+        /// <summary>
+        /// Backup From Db
+        /// </summary>
+        public void BackupFromDataBase(DatabaseName databaseName)
+        {
+            _uow.BackUpFromDb(databaseName);
         }
     }
 }

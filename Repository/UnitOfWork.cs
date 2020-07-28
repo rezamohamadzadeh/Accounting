@@ -5,6 +5,7 @@ using Repository.InterFace;
 using Repository.Repositories;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,7 +33,7 @@ namespace Repository
         }
 
 
-        
+
         private AffiliateRepository _affiliateRepository;
 
         public AffiliateRepository AffiliateRepo
@@ -77,19 +78,42 @@ namespace Repository
 
 
         #region BackUpFromDb
-        public bool BackUpFromDb(string path)
+
+        /// <summary>
+        /// Back Up from db with hangfire jobs
+        /// </summary>
+        /// <param name="databaseName"></param>
+        /// <returns></returns>
+        public void BackUpFromDb(DatabaseName databaseName)
         {
-            try
+            string savePath = "";
+            string DirectoryPath = "";
+            string BackUpFolder = "BackUp\\";
+            var dbName = databaseName.ToString();
+
+            switch (databaseName)
             {
-                _dbContext.Database.ExecuteSqlRaw("BACKUP DATABASE BaseProj TO DISK = {0}", path);
-                return true;
+                case DatabaseName.BaseProj:
+                    savePath = Path.Combine(Directory.GetCurrentDirectory(), BackUpFolder + dbName + "\\", dbName + "_" + DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss") + ".bak");
+                    DirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), BackUpFolder + dbName);
+
+                    break;
+                case DatabaseName.BuyerProfile:
+                    savePath = Path.Combine(Directory.GetCurrentDirectory(), BackUpFolder + dbName + "\\", dbName + "_" + DateTime.Now.ToString("yyyy-MM-dd_hh-mm-ss") + ".bak");
+                    DirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), BackUpFolder + dbName);
+
+                    break;
+                default:
+                    break;
             }
-            catch (Exception)
+            if (!Directory.Exists(DirectoryPath))
             {
-                return false;
+                Directory.CreateDirectory(DirectoryPath);
             }
+            _dbContext.Database.ExecuteSqlRaw("BACKUP DATABASE {0} TO DISK = {1}", dbName, savePath);
+
         }
         #endregion
-        
+
     }
 }
