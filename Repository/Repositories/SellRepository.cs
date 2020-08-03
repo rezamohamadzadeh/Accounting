@@ -240,5 +240,6 @@ namespace Repository.Repositories
 
             return query;
         }
+
     }
 }

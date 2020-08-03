@@ -7,6 +7,7 @@ using Common.Images;
 using DAL.Models;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -30,17 +31,22 @@ namespace Accounting.Controllers
         private readonly IUnitOfWork _uow;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IHanfireJobs _hanfireJobs;
+        private readonly IWebHostEnvironment _hostingEnvironment;
+
 
         public HomeController(UserManager<ApplicationUser> userManager,
             IMapper mapper, IUnitOfWork uow,
             SignInManager<ApplicationUser> signInManager,
-            IHanfireJobs hanfireJobs)
+            IHanfireJobs hanfireJobs,
+            IWebHostEnvironment hostingEnvironment)
         {
             _userManager = userManager;
             _mapper = mapper;
             _uow = uow;
             _signInManager = signInManager;
             _hanfireJobs = hanfireJobs;
+            _hostingEnvironment = hostingEnvironment;
+
         }
 
         public IActionResult Index()
@@ -71,6 +77,44 @@ namespace Accounting.Controllers
                 var lastChar = cron.CronExpressionString[cron.CronExpressionString.Length - 1];// get dayofweek
                 ConvertWeekDayToWeekStrName(cron, lastChar);
                 RecurringJob.AddOrUpdate("SendEmailBySelectWeekDayTime", () => _hanfireJobs.AccountingAffiliateAmountSell(), cron.CronExpressionString, TimeZoneInfo.Local);
+
+
+                feachEnums();
+                ViewBag.SuccessMessage = SuccessMessage;
+
+                return View("Index");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ErrorMessage + ex.Message;
+                return View("Index");
+            }
+
+        }
+
+
+        /// <summary>
+        /// Send affiliate sell reports to admins
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SendAffiliatesSellReportToAdmin(SendAffiliatesSellReportToAdminDto model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    feachEnums();
+                    return View();
+                }
+
+                var cron = CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(model.DayOfWeek, model.Time.Hour, model.Time.Minute).Build() as CronTriggerImpl;
+                var lastChar = cron.CronExpressionString[cron.CronExpressionString.Length - 1];// get dayofweek
+                ConvertWeekDayToWeekStrName(cron, lastChar);
+                RecurringJob.AddOrUpdate("SendAffiliatesSellReportToAdmin", () => _hanfireJobs.SendAffiliatesSellReportToAdmin(_hostingEnvironment.WebRootPath), cron.CronExpressionString, TimeZoneInfo.Local);
 
 
                 feachEnums();

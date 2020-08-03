@@ -141,6 +141,28 @@
 
             </div>
         </div>
+        <div class="col-lg-12 grid-margin d-flex align-items-stretch">
+            <div class="row flex-grow">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4>
+                                Send Affiliates SellReport To Admin
+                            </h4>
+                            <hr />
+                            <br />
+                            <form asp-action="SendAffiliatesSellReportToAdmin" method="post">
+                                <div asp-validation-summary="All" class="text-danger"></div>
+                                <partial name="_SendAffiliatesSellReportToAdmin" model="Model" />
+                                <br />
+                                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
 
     </div>
 </div>

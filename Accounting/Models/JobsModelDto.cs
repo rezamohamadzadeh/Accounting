@@ -27,6 +27,19 @@ namespace Accounting.Models
         public DayOfWeek DayOfWeek { get; set; }
 
     }
+    public class SendAffiliatesSellReportToAdminDto
+    {
+
+        [Display(Name = "Time")]
+        [Required(ErrorMessage = "Please Select {0}")]
+        public DateTime Time { get; set; }
+
+        [Display(Name = "DayOfWeek")]
+        [Required(ErrorMessage = "Please Select {0}")]
+        public DayOfWeek DayOfWeek { get; set; }
+
+    }
+
     public class BackUpDatabaseDto
     {
 

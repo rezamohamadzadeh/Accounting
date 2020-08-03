@@ -1,0 +1,22 @@
+﻿@model SendAffiliatesSellReportToAdminDto
+
+<div class="row">
+    <div class="col-6">
+        <h4 class="card-title">Day Of Week</h4>
+        <p class="card-description">Select Your Day</p>
+        <div class="input-group">
+            <select class="form-control" asp-for="DayOfWeek" asp-items="ViewBag.DayOfWeek">
+            </select>
+        </div>
+    </div>
+    <div class="col-6">
+        <h4 class="card-title">Clockpicker (default)</h4>
+        <p class="card-description">A simple clockpicker</p>
+        <div class="input-group">
+            <div class="input-group">
+                <input asp-for="Time" type="time" class="form-control">
+            </div>
+        </div>
+    </div>
+
+</div>

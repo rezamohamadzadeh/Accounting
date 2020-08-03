@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,7 +23,7 @@ namespace Service
         {
             _Config = configuration;
         }
-        public Task SendEmailAsync(string email, string subject, string message,IFormFile file = null)
+        public Task SendEmailAsync(string email, string subject, string message, IFormFile file = null)
         {
             MailMessage mail = new MailMessage();
             SmtpClient smtpServer = new SmtpClient(_Config["EmailConfig:smtp"]);
@@ -35,7 +36,31 @@ namespace Service
             if (file != null)
             {
                 string fileName = Path.GetFileName(file.FileName);
-                mail.Attachments.Add(new Attachment(file  .OpenReadStream(), fileName));
+                mail.Attachments.Add(new Attachment(file.OpenReadStream(), fileName));
+            }
+
+
+            smtpServer.Port = Convert.ToInt32(_Config["EmailConfig:Port"]);
+            smtpServer.Credentials = new System.Net.NetworkCredential(_Config["EmailConfig:Email"], _Config["EmailConfig:Pass"]);
+            smtpServer.EnableSsl = Convert.ToBoolean(_Config["EmailConfig:Ssl"]);   // this propertis is true  when your server support ssl
+
+            smtpServer.Send(mail);
+            return Task.CompletedTask;
+        }
+        public Task SendEmailWithMemoryStreamFileAsync(string email, string subject, string message, string fileName = null, string ContentType = null, byte[] file = null)
+        {
+
+            MailMessage mail = new MailMessage();
+            SmtpClient smtpServer = new SmtpClient(_Config["EmailConfig:smtp"]);
+            mail.From = new MailAddress(_Config["EmailConfig:Email"], _Config["EmailConfig:Title"], Encoding.UTF8);
+            mail.To.Add(email);
+            mail.Subject = subject;
+            mail.Body = message;
+            mail.IsBodyHtml = true;
+            smtpServer.Timeout = 20000;
+            if (file != null)
+            {
+                mail.Attachments.Add(new Attachment(new MemoryStream(file), fileName,ContentType));
             }
 
 

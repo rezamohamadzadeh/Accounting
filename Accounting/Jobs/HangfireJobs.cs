@@ -1,4 +1,8 @@
-﻿using DAL.Models;
+﻿using Accounting.Models;
+using Accounting.Utility;
+using Accounting.Utility.GeneratePdfFile;
+using DAL.Models;
+using Microsoft.AspNetCore.Identity;
 using Repository.InterFace;
 using Service;
 using System;
@@ -17,12 +21,15 @@ namespace Accounting.Jobs
     {
         private readonly IUnitOfWork _uow;
         private readonly IEmailSender _emailSender;
+        private readonly UserManager<ApplicationUser> _userManager;
 
 
-        public HanfireJobs(IUnitOfWork uow, IEmailSender emailSender)
+        public HanfireJobs(IUnitOfWork uow, IEmailSender emailSender, UserManager<ApplicationUser> userManager)
         {
             _uow = uow;
             _emailSender = emailSender;
+            _userManager = userManager;
+
         }
 
         /// <summary>
@@ -69,7 +76,7 @@ namespace Accounting.Jobs
         /// <param name="endDate"></param>
         /// <param name="remoteAddress"></param>
         public void DeleteRemoteFolderContentByDateRange(DateTime startDate,
-            DateTime endDate, string remoteAddress,string userName,string Password)
+            DateTime endDate, string remoteAddress, string userName, string Password)
         {
             remoteAddress += "/";
             FtpWebRequest request = (FtpWebRequest)WebRequest.Create(remoteAddress);
@@ -100,19 +107,6 @@ namespace Accounting.Jobs
 
                 string fileUrl = remoteAddress + name;
 
-                //if (permissions[0] == 'd')
-                //{
-                //    DeleteFtpDirectory(fileUrl + "/", credentials);
-                //}
-                //else
-                //{
-
-                //    FtpWebRequest deleteRequest = (FtpWebRequest)WebRequest.Create(fileUrl);
-                //    deleteRequest.Method = WebRequestMethods.Ftp.DeleteFile;
-                //    deleteRequest.Credentials = credentials;
-
-                //    deleteRequest.GetResponse();
-                //}
                 DateTime FileDate = DateTime.Parse(date);
                 if (FileDate >= startDate && FileDate <= endDate)
                 {
@@ -124,11 +118,6 @@ namespace Accounting.Jobs
                 }
             }
 
-            //FtpWebRequest removeRequest = (FtpWebRequest)WebRequest.Create(url);
-            //removeRequest.Method = WebRequestMethods.Ftp.RemoveDirectory;
-            //removeRequest.Credentials = credentials;
-
-            //removeRequest.GetResponse();
         }
 
         /// <summary>
@@ -137,6 +126,38 @@ namespace Accounting.Jobs
         public void BackupFromDataBase(DatabaseName databaseName)
         {
             _uow.BackUpFromDb(databaseName);
+        }
+
+        /// <summary>
+        /// Send Affiliate sell report to admins
+        /// </summary>
+        /// <param name="wwwroot">for pdf generator setting for example: header image and fonts</param>
+        /// <returns></returns>
+        public async Task SendAffiliatesSellReportToAdmin(string wwwroot)
+        {
+            List<AffiliateReportDto> list = new List<AffiliateReportDto>();
+            var adminUsers = await _userManager.GetUsersInRoleAsync("Admin");
+            var affiliates = _uow.AffiliateRepo.Get();
+            foreach (var affiliate in affiliates)
+            {
+                var sells = _uow.SellRepo.Get(d => d.AffiliateCode == affiliate.Code && d.CreateAt > DateTime.Now.AddDays(-7));
+                var registeredCount = sells.Count() == 0 ? 0 : sells.Count(d => d.PayStatus == PayStatus.Registered);
+                var sell = sells.Count() == 0 ? 0 : sells.Count(d => d.PayStatus == PayStatus.Registered);
+                var sumSell = sells.Count() == 0 ? 0 : sells.Where(m => m.PayStatus != PayStatus.Registered).Sum(d => d.Price);
+                var report = new AffiliateReportDto()
+                {
+                    AffiliateCode = affiliate.Code,
+                    RegisteredCount = registeredCount,
+                    SumSell = sumSell,
+                    AffiliateEmail = affiliate.Email
+                };
+                list.Add(report);
+            }
+            foreach (var admin in adminUsers)
+            {
+                var pdfFile = CreatePdf.createReport(wwwroot, list).GenerateAsByteArray();
+                await _emailSender.SendEmailWithMemoryStreamFileAsync(admin.Email, "AffiliateReport", "This email is affiliates sell report", Guid.NewGuid().ToString() + ".pdf", "Application/Pdf", pdfFile);
+            }
         }
     }
 }
