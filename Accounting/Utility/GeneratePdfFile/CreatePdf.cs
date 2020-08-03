@@ -11,7 +11,12 @@ namespace Accounting.Utility.GeneratePdfFile
 {
     public static class CreatePdf
     {
-       
+       /// <summary>
+       /// This Method generetate pdf file
+       /// </summary>
+       /// <param name="wwwroot">for get pdf header image and fonts</param>
+       /// <param name="list">set list in method and return pdf file</param>
+       /// <returns></returns>
         public static PdfReport createReport(string wwwroot,List<AffiliateReportDto> list)
         {
             return new PdfReport().DocumentPreferences(doc =>
