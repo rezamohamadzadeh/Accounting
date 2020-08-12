@@ -8,7 +8,7 @@ namespace Accounting.Jobs
     public interface IHanfireJobs
     {
         Task AccountingAffiliateAmountSell();
-        Task SendAffiliatesSellReportToAdmin(string wwwroot);
+        Task SendAffiliatesSellReportToAdmin();
         void BackupFromDataBase(DatabaseName databaseName);
         void DeleteLocalFolderContentByDateRange(DateTime startDate, DateTime endDate, string folderName);
         void DeleteRemoteFolderContentByDateRange(DateTime startDate, DateTime endDate, string remoteAddress, string userName, string Password);

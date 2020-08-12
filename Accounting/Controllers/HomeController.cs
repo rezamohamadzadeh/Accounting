@@ -1,5 +1,4 @@
-﻿using Accounting.Controllers;
-using Accounting.Jobs;
+﻿using Accounting.Jobs;
 using Accounting.Models;
 using AutoMapper;
 using Common.Extensions;
@@ -11,14 +10,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Configuration;
 using Quartz;
 using Quartz.Impl.Triggers;
 using Repository.InterFace;
-using Service;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Accounting.Controllers
@@ -32,13 +31,15 @@ namespace Accounting.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IHanfireJobs _hanfireJobs;
         private readonly IWebHostEnvironment _hostingEnvironment;
-
+        private IConfiguration _configuration { get; }
 
         public HomeController(UserManager<ApplicationUser> userManager,
             IMapper mapper, IUnitOfWork uow,
             SignInManager<ApplicationUser> signInManager,
             IHanfireJobs hanfireJobs,
-            IWebHostEnvironment hostingEnvironment)
+            IWebHostEnvironment hostingEnvironment,
+            IConfiguration configuration)
+
         {
             _userManager = userManager;
             _mapper = mapper;
@@ -46,15 +47,27 @@ namespace Accounting.Controllers
             _signInManager = signInManager;
             _hanfireJobs = hanfireJobs;
             _hostingEnvironment = hostingEnvironment;
-
+            _configuration = configuration;
+        }
+        public class BotUserAuth
+        {
+            public string UserType { get; set; }
+            public string Username { get; set; }
+            public string Password { get; set; }
+            public DateTimeOffset CreateDate { get; set; }
         }
 
-        public IActionResult Index()
+        private IConfiguration Configuration { get; }
+
+        private ConcurrentDictionary<long, BotUserAuth> _credentials = new ConcurrentDictionary<long, BotUserAuth>();
+
+
+
+        public ActionResult Index()
         {
             feachEnums();
             return View();
-        }
-
+        }                
 
         /// <summary>
         /// Send Email By Select Dayofweek and Time
@@ -114,7 +127,7 @@ namespace Accounting.Controllers
                 var cron = CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(model.DayOfWeek, model.Time.Hour, model.Time.Minute).Build() as CronTriggerImpl;
                 var lastChar = cron.CronExpressionString[cron.CronExpressionString.Length - 1];// get dayofweek
                 ConvertWeekDayToWeekStrName(cron, lastChar);
-                RecurringJob.AddOrUpdate("SendAffiliatesSellReportToAdmin", () => _hanfireJobs.SendAffiliatesSellReportToAdmin(_hostingEnvironment.WebRootPath), cron.CronExpressionString, TimeZoneInfo.Local);
+                RecurringJob.AddOrUpdate("SendAffiliatesSellReportToAdmin", () => _hanfireJobs.SendAffiliatesSellReportToAdmin(), cron.CronExpressionString, TimeZoneInfo.Local);
 
 
                 feachEnums();

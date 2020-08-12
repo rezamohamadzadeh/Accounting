@@ -35,7 +35,7 @@ namespace Accounting
             services.AddDbContext<ApplicationDbContext>(Options => Options.UseSqlServer(Configuration.GetConnectionString("Local")));
 
             services.AddTransient<IUnitOfWork, UnitOfWork>();
-
+            services.AddHttpClient();
             services.AddControllersWithViews()
                    .AddRazorRuntimeCompilation()
                    .AddJsonOptions(options =>
@@ -89,6 +89,8 @@ namespace Accounting
             #endregion
 
             services.AddTransient<IHanfireJobs, HanfireJobs>();
+
+            
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

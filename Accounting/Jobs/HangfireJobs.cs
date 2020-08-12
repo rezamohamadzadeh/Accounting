@@ -1,8 +1,7 @@
 ﻿using Accounting.Models;
-using Accounting.Utility;
-using Accounting.Utility.GeneratePdfFile;
 using DAL.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Repository.InterFace;
 using Service;
 using System;
@@ -10,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Accounting.Jobs
@@ -22,14 +22,15 @@ namespace Accounting.Jobs
         private readonly IUnitOfWork _uow;
         private readonly IEmailSender _emailSender;
         private readonly UserManager<ApplicationUser> _userManager;
-
-
-        public HanfireJobs(IUnitOfWork uow, IEmailSender emailSender, UserManager<ApplicationUser> userManager)
+        private readonly IConfiguration _config;
+        private readonly IHttpClientFactory _client;
+        public HanfireJobs(IUnitOfWork uow, IEmailSender emailSender, UserManager<ApplicationUser> userManager,IConfiguration config,IHttpClientFactory client)
         {
             _uow = uow;
             _emailSender = emailSender;
             _userManager = userManager;
-
+            _config = config;
+            _client = client;
         }
 
         /// <summary>
@@ -133,31 +134,41 @@ namespace Accounting.Jobs
         /// </summary>
         /// <param name="wwwroot">for pdf generator setting for example: header image and fonts</param>
         /// <returns></returns>
-        public async Task SendAffiliatesSellReportToAdmin(string wwwroot)
+        public async Task SendAffiliatesSellReportToAdmin()
         {
             List<AffiliateReportDto> list = new List<AffiliateReportDto>();
             var adminUsers = await _userManager.GetUsersInRoleAsync("Admin");
-            var affiliates = _uow.AffiliateRepo.Get();
-            foreach (var affiliate in affiliates)
-            {
-                var sells = _uow.SellRepo.Get(d => d.AffiliateCode == affiliate.Code && d.CreateAt > DateTime.Now.AddDays(-7));
-                var registeredCount = sells.Count() == 0 ? 0 : sells.Count(d => d.PayStatus == PayStatus.Registered);
-                var sell = sells.Count() == 0 ? 0 : sells.Count(d => d.PayStatus == PayStatus.Registered);
-                var sumSell = sells.Count() == 0 ? 0 : sells.Where(m => m.PayStatus != PayStatus.Registered).Sum(d => d.Price);
-                var report = new AffiliateReportDto()
-                {
-                    AffiliateCode = affiliate.Code,
-                    RegisteredCount = registeredCount,
-                    SumSell = sumSell,
-                    AffiliateEmail = affiliate.Email
-                };
-                list.Add(report);
-            }
+            var affiliateReportFile = await GetAffiliateReportApi("Weekly", "Admin");
             foreach (var admin in adminUsers)
             {
-                var pdfFile = CreatePdf.createReport(wwwroot, list).GenerateAsByteArray();
+                var pdfFile = affiliateReportFile;
                 await _emailSender.SendEmailWithMemoryStreamFileAsync(admin.Email, "AffiliateReport", "This email is affiliates sell report", Guid.NewGuid().ToString() + ".pdf", "Application/Pdf", pdfFile);
             }
+
+        }
+        private async Task<byte[]> GetAffiliateReportApi(string filterDate, string userType, string email = null)
+        {
+            var url = _config["BaseApiUrl"];
+            url += string.Format("/api/Affiliate/GetAffiliateUsers?filterDate={0}&userType={1}&email={2}", filterDate, userType, email);
+            var api = _client.CreateClient();
+            try
+            {
+                HttpResponseMessage messages = await api.GetAsync(url);
+
+                if (messages.IsSuccessStatusCode)
+                {
+                    var contentResult = await messages.Content.ReadAsAsync<JsonResultContent<byte[]>>();
+                    return contentResult.Data;
+                }
+                else
+                    return null;
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
         }
     }
 }

@@ -37,7 +37,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.6" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.3" />
-    <PackageReference Include="Syncfusion.Pdf.Net.Core" Version="18.2.0.47" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,15 +44,6 @@
     <ProjectReference Include="..\DAL\DAL.csproj" />
     <ProjectReference Include="..\Repository\Repository.csproj" />
     <ProjectReference Include="..\Service\Service.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="EPPlus">
-      <HintPath>C:\Users\Administrator\Downloads\Compressed\PdfReport.Core-master\PdfReport.Core-master\PdfRpt.Core.SampleWebApp\bin\Debug\netcoreapp3.1\EPPlus.dll</HintPath>
-    </Reference>
-    <Reference Include="PdfRpt.Core">
-      <HintPath>C:\Users\Administrator\Downloads\Compressed\PdfReport.Core-master\PdfReport.Core-master\PdfRpt.Core.SampleWebApp\bin\Debug\netcoreapp3.1\PdfRpt.Core.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>
