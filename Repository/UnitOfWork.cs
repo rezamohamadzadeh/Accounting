@@ -61,6 +61,19 @@ namespace Repository
                 return _sellRepository;
             }
         }
+        private ProductDetailRepository _productDetailRepository;
+
+        public ProductDetailRepository ProductDetailRepo
+        {
+            get
+            {
+                if (_productDetailRepository == null)
+                {
+                    _productDetailRepository = new ProductDetailRepository(_dbContext);
+                }
+                return _productDetailRepository;
+            }
+        }
 
         public void Save()
         {

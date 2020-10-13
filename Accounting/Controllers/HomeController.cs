@@ -214,6 +214,39 @@ namespace Accounting.Controllers
 
         }
 
+        /// <summary>
+        /// ChangeUSDToNewCurrency - With this job you can change product prices by usd currency to other currency prices
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ChangeUSDToNewCurrency(ChangeUSDToNewCurrencyDto model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    feachEnums();
+                    return View();
+                }
+                var cron = CronScheduleBuilder.DailyAtHourAndMinute(model.Time.Hour, model.Time.Minute).Build() as CronTriggerImpl;
+                RecurringJob.AddOrUpdate("ChangeUSDToNewCurrency", () => _hanfireJobs.ChangeUSDToNewCurrencyJob(model.Currency,model.Amount), cron.CronExpressionString, TimeZoneInfo.Local);
+
+
+                feachEnums();
+                ViewBag.SuccessMessage = SuccessMessage;
+                return View("Index");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ErrorMessage + ex.Message;
+                return View("Index");
+            }
+
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteLocalFolderContentByDateRange(DeleteLocalFolderContentByDateRangeDto model)

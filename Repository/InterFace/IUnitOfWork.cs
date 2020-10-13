@@ -1,8 +1,5 @@
 ﻿using DAL.Models;
 using Repository.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Repository.InterFace
@@ -14,6 +11,9 @@ namespace Repository.InterFace
         public UserRepository UserRepo { get; }
 
         public AffiliateRepository AffiliateRepo { get; }
+
+        public ProductDetailRepository ProductDetailRepo { get; }
+
 
         void BackUpFromDb(DatabaseName databaseName);
 

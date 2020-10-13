@@ -67,6 +67,26 @@ namespace Accounting.Models
         public DateTime Time { get; set; }
 
     }
+    public class ChangeUSDToNewCurrencyDto
+    {
+
+        [Display(Name = "Time")]
+        [Required(ErrorMessage = "Please Select {0}")]
+        public DateTime Time { get; set; }
+
+        
+        [Display(Name = "Amount")]
+        [Required(ErrorMessage = "Please Select {0}")]
+        public double Amount { get; set; }
+
+        
+        [Display(Name = "Currency")]
+        [Required(ErrorMessage = "Please Select {0}")]
+        public string Currency { get; set; }
+
+
+    }
+
     /// <summary>
     /// Delete Folder Content by date range
     /// </summary>

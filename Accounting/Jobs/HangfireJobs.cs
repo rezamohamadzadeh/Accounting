@@ -170,5 +170,48 @@ namespace Accounting.Jobs
             }
 
         }
+
+        /// <summary>
+        /// ChangeUSDToNewCurrency - With this job you can change product prices by usd currency to other currency prices
+        /// </summary>
+        /// <param name="currency"></param>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+
+        public async Task ChangeUSDToNewCurrencyJob(string currency,double amount)
+        {
+            var url = _config["BaseApiUrl"];
+            url += string.Format("/api/ConvertCurrency?currency={0}&amount={1}",currency,amount);
+
+            var api = _client.CreateClient();
+            try
+            {
+                HttpResponseMessage messages = await api.GetAsync(url);
+
+                if (messages.IsSuccessStatusCode)
+                {
+                    var contentResult = await messages.Content.ReadAsAsync<CurrencyDto>();
+                    var currencyResult = contentResult.result;
+                    var products = _uow.ProductDetailRepo.Get();
+
+                    // Change New price by new currency
+
+                    foreach (var item in products)
+                    {
+                        var newPrice = (item.Price * currencyResult) / amount;
+                        item.Price = newPrice;
+                        _uow.ProductDetailRepo.Update(item);
+                        await _uow.SaveAsync();
+                    }
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                
+            }
+
+        }
+
     }
 }
